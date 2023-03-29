@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../Headers/Graph.h"
 
 using namespace std;
 
