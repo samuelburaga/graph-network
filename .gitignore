@@ -1,5 +1,7 @@
 *
 !*/
 !*.cpp
+!*.h
+!**/Headers/**
 !**/Resources/
 !**/Resources/**
