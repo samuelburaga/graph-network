@@ -1,0 +1,10 @@
+# Ignore all directories that contain the words "build", "release", "web"
+**/*build*/
+**/*web*/
+**/*release*/
+**/*web*/
+
+# Ignore all files inside "Social network of GitHub developers" folder, except for specific extensions
+Coding/Social network of GitHub developers/*
+!Coding/Social network of GitHub developers/**/*.cpp
+!Coding/Social network of GitHub developers/**/*.h
