@@ -8,3 +8,4 @@
 Coding/Social network of GitHub developers/*
 !Coding/Social network of GitHub developers/**/*.cpp
 !Coding/Social network of GitHub developers/**/*.h
+!Coding/Social network of GitHub developers/Sources/*.cpp
