@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../inputData.cpp"
+#include "inputData.cpp"
 
 int main()
 {

@@ -1,4 +1,5 @@
-#include "Headers/Graph.h"
+#include "../Headers/Graph.h"
+#include "../Headers/stringToType.h"
 #include <fstream>
 #include <vector>
 #include <string>
@@ -12,23 +13,22 @@ void Graph <Type>::inputData()
 	{
         std::ifstream file;
 		file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/git_web_ml/musae_git_edges.csv");
+		std::string titles;
+		getline(file, titles);
 		std::string line;
-		getline(file, line);
-		//std::string line;
 		int x = 0;
 		while (getline(file, line))
 		{
 			std::istringstream ss(line);
-			std::string col1, col2;
-			getline(ss, col1, ',');
-			getline(ss, col2, ',');
-			int num1 = stoi(col1);
-			int num2 = stoi(col2);
-
-			// Do something with the data, e.g. print it
-			std::cout << "Number 1: " << num1 << ", Number 2: " << num2 << std::endl;
+			std::string firstColumn, secondColumn;
+			getline(ss, firstColumn, ',');
+			getline(ss, secondColumn, ',');
+			int num1 = stoi(firstColumn);
+			int num2 = stoi(secondColumn);
+			Type u = convert_to <Type>(firstColumn);
+			Type v = convert_to <Type>(secondColumn);
+			std::cout << u << " , " << v << std::endl;
 		}
-
 	}
 	catch (...)
 	{
