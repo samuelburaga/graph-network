@@ -16,7 +16,8 @@ void Graph <Type>::inputData()
 		std::string titles;
 		getline(file, titles);
 		std::string line;
-		while (getline(file, line))
+		unsigned long long edge = 0;
+		while (getline(file, line) && edge <= 100)
 		{
 			std::istringstream ss(line);
 			std::string firstColumn, secondColumn;
@@ -35,7 +36,8 @@ void Graph <Type>::inputData()
 				(*this).vertices = v;
 			}
 			(*this).vertices++;*/
-			(*this).addEdge(u, v);
+			edge++;
+			(*this).addEdge(u, v, edge);
 		}
 	}
 	catch (...)

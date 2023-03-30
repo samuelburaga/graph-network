@@ -10,20 +10,24 @@ private:
 	unsigned long long vertices;
 	std::list<Type>* adjacencyList;
 	bool** adjacencyMatrix;
+	bool** incidenceMatrix;
 public:
 	Graph();
 	Graph(const unsigned long long&);
 	void inputData();
 	void addEdge(const unsigned long long&, const unsigned long long&);
+	void addEdge(const unsigned long long&, const unsigned long long&, const unsigned long long&);
 	unsigned long long& getVertices();
 	template <class Type> friend std::ostream& operator<<(std::ostream&, Graph <Type>&);
-	void printAdjacencyMatrix();
 	void printAdjacencyList();
+	void printAdjacencyMatrix();
+	void printIncidenceMatrix();
 };
 template <class Type> Graph <Type>::Graph()
 {
 	(*this).vertices = 0;
-	(*this).adjacencyMatrix = new int* [0];
+	(*this).adjacencyMatrix = new bool* [0];
+	(*this).incidenceMatrix = new bool* [0];
 }
 template <class Type> Graph <Type>::Graph(const unsigned long long& vertices)
 {
@@ -41,6 +45,18 @@ template <class Type> Graph <Type>::Graph(const unsigned long long& vertices)
 			(*this).adjacencyMatrix[row][column] = false;
 		}
 	}
+	(*this).incidenceMatrix = new bool* [(*this).vertices];
+	for (unsigned long long index = 0; index < (*this).vertices; index++)
+	{
+		incidenceMatrix[index] = new bool[(*this).vertices];
+	}
+	for (unsigned long long row = 0; row < (*this).vertices; row++)
+	{
+		for (unsigned long long column = 0; column < (*this).vertices; column++)
+		{
+			(*this).incidenceMatrix[row][column] = false;
+		}
+	}
 }
 template <class Type> unsigned long long& Graph <Type>::getVertices()
 {
@@ -51,11 +67,40 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 	adjacencyList[u].push_back(v);
 	adjacencyMatrix[u][v] = adjacencyMatrix[v][u] = true;
 }
+template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long& v, const unsigned long long& edge)
+{
+	adjacencyList[u].push_back(v);
+	adjacencyMatrix[u][v] = adjacencyMatrix[v][u] = true;
+	incidenceMatrix[u][edge] = incidenceMatrix[v][edge] = true;
+}
 template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type>& graph)
 {
-	graph.printAdjacencyMatrix();
-	graph.printAdjacencyList();
+	//graph.printAdjacencyList();
+	//graph.printAdjacencyMatrix();
+	graph.printIncidenceMatrix();
 	return output;
+}
+template <class Type> void Graph <Type>::printAdjacencyList()
+{
+	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency List.csv");
+	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 20; vertex++)
+	{
+		file << vertex << ",";
+		typename std::list<Type>::iterator i;
+		for (i = adjacencyList[vertex].begin(); i != adjacencyList[vertex].end(); ++i)
+		{
+			file << *i;
+			typename std::list<Type>::iterator j;
+			j = i;
+			j++;
+			if (j != adjacencyList[vertex].end())
+			{
+				file << ",";
+			}
+		}
+		file << "\n";
+	}
+	file.close();
 }
 template <class Type> void Graph <Type>::printAdjacencyMatrix()
 {
@@ -74,20 +119,15 @@ template <class Type> void Graph <Type>::printAdjacencyMatrix()
 	}
 	file.close();
 }
-template <class Type> void Graph <Type>::printAdjacencyList()
+template <class Type> void Graph <Type>::printIncidenceMatrix()
 {
-	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency List.csv");
-	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 20; vertex++)
+	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Incidence Matrix.csv");
+	for (unsigned long long row = 0; row < /*(*this).vertices*/ 10; row++)
 	{
-		file << vertex << ",";
-		typename std::list<Type>::iterator i;
-		for (i = adjacencyList[vertex].begin(); i != adjacencyList[vertex].end(); ++i)
+		for (unsigned long long column = 0; column < /*(*this).vertices*/ 10; column++)
 		{
-			file << *i;
-			typename std::list<Type>::iterator j;
-			j = i;
-			j++;
-			if (j != adjacencyList[vertex].end())
+			file << (*this).incidenceMatrix[row][column];
+			if (column < /*(*this).vertices*/ 10 - 1)
 			{
 				file << ",";
 			}
