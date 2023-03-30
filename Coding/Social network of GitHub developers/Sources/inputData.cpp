@@ -16,7 +16,6 @@ void Graph <Type>::inputData()
 		std::string titles;
 		getline(file, titles);
 		std::string line;
-		int x = 0;
 		while (getline(file, line))
 		{
 			std::istringstream ss(line);
@@ -28,7 +27,16 @@ void Graph <Type>::inputData()
 			Type u = convert_to <Type>(firstColumn);
 			Type v = convert_to <Type>(secondColumn);
 			std::cout << u << " , " << v << std::endl;
+			if (u > (*this).vertices)
+			{
+				(*this).vertices = u;
+			}
+			if (v > (*this).vertices)
+			{
+				(*this).vertices = v;
+			}
 		}
+		std::cout << (*this).vertices;
 	}
 	catch (...)
 	{
