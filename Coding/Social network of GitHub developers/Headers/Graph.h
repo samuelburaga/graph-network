@@ -10,7 +10,7 @@ private:
 public:
 	Graph();
 	Graph(unsigned long long);
-	Graph(const Graph <Type>&);
+	//Graph(const Graph <Type>&);
 	void inputData();
 };
 template <class Type> Graph <Type>::Graph()
