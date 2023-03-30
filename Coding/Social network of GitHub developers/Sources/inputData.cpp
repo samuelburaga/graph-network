@@ -26,8 +26,7 @@ void Graph <Type>::inputData()
 			int num2 = stoi(secondColumn);
 			Type u = convert_to <Type>(firstColumn);
 			Type v = convert_to <Type>(secondColumn);
-			std::cout << u << " , " << v << std::endl;
-			if (u > (*this).vertices)
+		/*	if (u > (*this).vertices)
 			{
 				(*this).vertices = u;
 			}
@@ -35,8 +34,9 @@ void Graph <Type>::inputData()
 			{
 				(*this).vertices = v;
 			}
+			(*this).vertices++;*/
+			(*this).addEdge(u, v);
 		}
-		std::cout << (*this).vertices;
 	}
 	catch (...)
 	{
