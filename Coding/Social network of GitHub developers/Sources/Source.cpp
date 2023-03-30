@@ -1,9 +1,10 @@
 #include <iostream>
 #include "../Headers/Graph.h"
-
-using namespace std;
+#include "../inputData.cpp"
 
 int main()
 {
+	Graph <unsigned long long> GitHub(5);
+	GitHub.inputData();
 	return 0;
 }
