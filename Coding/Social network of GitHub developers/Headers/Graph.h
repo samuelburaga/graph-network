@@ -53,15 +53,8 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 }
 template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type>& graph)
 {
-
-	for (unsigned long long row = 0; row < graph.vertices; row++)
-	{
-		for (unsigned long long column = 0; column < graph.vertices; column++)
-		{
-			output << graph.adjacencyMatrix[row][column] << " ";
-		}
-		output << "\n";
-	}
+	graph.printAdjacencyMatrix();
+	graph.printAdjacencyList();
 	return output;
 }
 template <class Type> void Graph <Type>::printAdjacencyMatrix()
