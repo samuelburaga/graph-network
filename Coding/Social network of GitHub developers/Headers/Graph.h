@@ -1,6 +1,7 @@
 #pragma once
 #include <list>
 #include <iostream>
+#include <fstream>
 
 template <class Type> 
 class Graph
@@ -8,7 +9,7 @@ class Graph
 private:
 	unsigned long long vertices;
 	std::list<Type>* adjacencyList;
-	int** adjacencyMatrix;
+	bool** adjacencyMatrix;
 public:
 	Graph();
 	Graph(const unsigned long long&);
@@ -16,6 +17,8 @@ public:
 	void addEdge(const unsigned long long&, const unsigned long long&);
 	unsigned long long& getVertices();
 	template <class Type> friend std::ostream& operator<<(std::ostream&, Graph <Type>&);
+	void printAdjacencyMatrix();
+	void printAdjacencyList();
 };
 template <class Type> Graph <Type>::Graph()
 {
@@ -25,19 +28,19 @@ template <class Type> Graph <Type>::Graph()
 template <class Type> Graph <Type>::Graph(const unsigned long long& vertices)
 {
 	(*this).vertices = vertices;
-	(*this).adjacencyMatrix = new int* [(*this).vertices];
+	adjacencyList = new std::list<Type>[(*this).vertices];
+	(*this).adjacencyMatrix = new bool* [(*this).vertices];
 	for (unsigned long long index = 0; index < (*this).vertices; index++)
 	{
-		adjacencyMatrix[index] = new int[(*this).vertices];
+		adjacencyMatrix[index] = new bool[(*this).vertices];
 	}
 	for (unsigned long long row = 0; row < (*this).vertices; row++)
 	{
 		for (unsigned long long column = 0; column < (*this).vertices; column++)
 		{
-			(*this).adjacencyMatrix[row][column] = 0;
+			(*this).adjacencyMatrix[row][column] = false;
 		}
 	}
-	std::cout << "DA";
 }
 template <class Type> unsigned long long& Graph <Type>::getVertices()
 {
@@ -45,12 +48,12 @@ template <class Type> unsigned long long& Graph <Type>::getVertices()
 }
 template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long &v)
 {
-	std::cout << "DA'n";
-	adjacencyMatrix[u][v] = 1;
-	adjacencyMatrix[v][u] = 1;
+	adjacencyList[u].push_back(v);
+	adjacencyMatrix[u][v] = adjacencyMatrix[v][u] = true;
 }
 template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type>& graph)
 {
+
 	for (unsigned long long row = 0; row < graph.vertices; row++)
 	{
 		for (unsigned long long column = 0; column < graph.vertices; column++)
@@ -60,4 +63,43 @@ template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type
 		output << "\n";
 	}
 	return output;
+}
+template <class Type> void Graph <Type>::printAdjacencyMatrix()
+{
+	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency Matrix.csv");
+	for (unsigned long long row = 0; row < /*(*this).vertices*/ 300; row++)
+	{
+		for (unsigned long long column = 0; column < /*(*this).vertices*/ 300; column++)
+		{
+			file << (*this).adjacencyMatrix[row][column];
+			if (column < /*(*this).vertices*/ 300 - 1)
+			{
+				file << ",";
+			}
+		}
+		file << "\n";
+	}
+	file.close();
+}
+template <class Type> void Graph <Type>::printAdjacencyList()
+{
+	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency List.csv");
+	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 20; vertex++)
+	{
+		file << vertex << ",";
+		typename std::list<Type>::iterator i;
+		for (i = adjacencyList[vertex].begin(); i != adjacencyList[vertex].end(); ++i)
+		{
+			file << *i;
+			typename std::list<Type>::iterator j;
+			j = i;
+			j++;
+			if (j != adjacencyList[vertex].end())
+			{
+				file << ",";
+			}
+		}
+		file << "\n";
+	}
+	file.close();
 }

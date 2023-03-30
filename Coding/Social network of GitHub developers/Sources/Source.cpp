@@ -6,6 +6,8 @@ int main()
 	Graph <unsigned long long> GitHub(37700);
 	//Graph <unsigned long long> GitHub;
 	GitHub.inputData();
-	std::cout << GitHub;
+	//std::cout << GitHub;
+	//GitHub.printAdjacencyMatrix();
+	GitHub.printAdjacencyList();
 	return 0;
 }
