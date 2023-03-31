@@ -20,7 +20,7 @@ void Graph <Type>::inputData()
 		std::string line;
 		unsigned long long edge = 0;
 
-		while (getline(file, line) && edge != (*this).vertices)
+		while (getline(file, line) /* && edge != (*this).vertices */)
 		{
 			std::istringstream ss(line);
 			std::string firstColumn, secondColumn;

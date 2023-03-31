@@ -1,6 +1,7 @@
 #pragma once
 #include "../Headers/sparseMatrix.h"
 #include <queue>
+#include <stack>
 #include <vector>
 #include <list>
 #include <set>
@@ -58,6 +59,9 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 }
 template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long& v, const unsigned long long& edge)
 {
+	static unsigned long long i = 1;
+	std::cout << i << "\n";
+	i++;
 	adjacencyList[u].push_back(v);
 	adjacencyList[v].push_back(u);
 	(*this).adjacencyMatrix.add(u, v, true);
@@ -212,91 +216,121 @@ template <class Type> void Graph <Type>::printShortestDistance(const Type& sourc
 	delete[] distance;
 }
 template <class Type> void Graph<Type>::DFS(unsigned long long v, bool visited[], std::vector<Type>& component)
-{
+{/*
 	visited[v] = true;
 	component.push_back(v);
+	typename std::list<Type>::iterator it;
+	for (it = adjacencyList[v].begin(); it != adjacencyList[v].end(); ++it) 
+	{
+		if (!visited[*it]) 
+		{
+			DFS(*it, visited, component);
+		}
+	}*/
+	std::stack<unsigned long long> stack;
+	stack.push(v);
 
-	typename std::list<Type>::iterator i;
-	for (i = adjacencyList[v].begin(); i != adjacencyList[v].end(); ++i) {
-		if (!visited[*i]) {
-			DFS(*i, visited, component);
+	while (!stack.empty()) {
+		unsigned long long current = stack.top();
+		stack.pop();
+
+		if (!visited[current]) {
+			visited[current] = true;
+			component.push_back(current);
+
+			for (auto i = adjacencyList[current].begin(); i != adjacencyList[current].end(); ++i) {
+				if (!visited[*i]) {
+					stack.push(*i);
+				}
+			}
 		}
 	}
 }
 template <class Type> void Graph<Type>::countAndPrintConnectedComponents()
 {
-	bool* visited = new bool[vertices];
-	for (unsigned long long i = 0; i < vertices; i++) {
-		visited[i] = false;
+	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Connected components.csv");
+	bool* visited = new bool[(*this).vertices];
+	for (unsigned long long index = 0; index < (*this).vertices; index++) 
+	{
+		visited[index] = false;
 	}
-
-	unsigned long long numComponents = 0;
-	for (unsigned long long i = 0; i < vertices; i++) {
-		if (!visited[i]) {
-			numComponents++;
+	unsigned long long numberOfComponents = 0;
+	for (unsigned long long index = 0; index < (*this).vertices; index++) 
+	{
+		if (!visited[index]) 
+		{
+			numberOfComponents++;
 			std::vector<Type> component;
-			DFS(i, visited, component);
-			std::cout << "Component " << numComponents << ": ";
-			for (typename std::vector<Type>::iterator it = component.begin(); it != component.end(); ++it) {
-				std::cout << *it << " ";
+			DFS(index, visited, component);
+			file << "Component " << numberOfComponents << ", ";
+			for (typename std::vector<Type>::iterator it = component.begin(); it != component.end(); ++it) 
+			{
+				file << *it << ", ";
 			}
-			std::cout << std::endl;
+			file << "\n";
 		}
 	}
-
-	std::cout << "Number of connected components: " << numComponents << std::endl;
+	file << "Number of connected components: " << numberOfComponents << std::endl;
 
 	delete[] visited;
 }
 template <class Type> void Graph<Type>::findMST() {
 	// create a priority queue to hold edges in ascending order
 	std::priority_queue<std::pair<int, std::pair<unsigned long long, unsigned long long>>,
-		std::vector<std::pair<int, std::pair<unsigned long long, unsigned long long>>>> pq;
+	std::vector<std::pair<int, std::pair<unsigned long long, unsigned long long>>>> pq;
 
 	// add all edges to the priority queue
-	for (unsigned long long i = 0; i < vertices; i++) {
-		for (typename std::list<Type>::iterator it = adjacencyList[i].begin(); it != adjacencyList[i].end(); ++it) {
-			unsigned long long v = i;
+	for (unsigned long long index = 0; index < vertices; index++) 
+	{
+		for (typename std::list<Type>::iterator it = adjacencyList[index].begin(); it != adjacencyList[index].end(); ++it) {
+			unsigned long long v = index;
 			unsigned long long w = *it;
-			if (v < w) {
+			if (v < w) 
+			{
 				pq.push(std::make_pair(1, std::make_pair(v, w)));
 			}
 		}
 	}
 
 	// create a disjoint set for vertices
-	std::vector<unsigned long long> parent(vertices);
-	for (unsigned long long i = 0; i < vertices; i++) {
-		parent[i] = i;
+	std::vector<unsigned long long> predecessor((*this).vertices);
+	for (unsigned long long index = 0; index < vertices; index++) 
+	{
+		predecessor[index] = index;
 	}
 
 	// create a vector to store the MST edges
 	std::vector<std::pair<unsigned long long, unsigned long long>> mst;
 
 	// process edges in the priority queue until all vertices are in the same component
-	while (!pq.empty() && mst.size() < vertices - 1) {
+	while (!pq.empty() && mst.size() < (*this).vertices - 1) 
+	{
 		std::pair<int, std::pair<unsigned long long, unsigned long long>> curr = pq.top();
 		pq.pop();
 		unsigned long long u = curr.second.first;
 		unsigned long long v = curr.second.second;
 
 		// check if u and v are in different components
-		while (parent[u] != u) {
-			u = parent[u];
+		while (predecessor[u] != u) 
+		{
+			u = predecessor[u];
 		}
-		while (parent[v] != v) {
-			v = parent[v];
+		while (predecessor[v] != v) 
+		{
+			v = predecessor[v];
 		}
-		if (u != v) {
+		if (u != v) 
+		{
 			// add the edge to the MST
 			mst.push_back(std::make_pair(curr.second.first, curr.second.second));
-			parent[u] = v;
+			predecessor[u] = v;
 		}
 	}
 
 	// print the MST edges
 	std::cout << "Minimum Spanning Tree:" << std::endl;
-	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it) {
+	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it) 
+	{
 		std::cout << it->first << " - " << it->second << std::endl;
 	}
 }
