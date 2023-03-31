@@ -1,4 +1,5 @@
 #pragma once
+#include "../Headers/sparseMatrix.h"
 #include <queue>
 #include <vector>
 #include <list>
@@ -12,7 +13,7 @@ class Graph
 private:
 	unsigned long long vertices;
 	std::list<Type>* adjacencyList;
-	bool** adjacencyMatrix;
+	sparseMatrix <bool> adjacencyMatrix;
 	bool** incidenceMatrix;
 public:
 	Graph();
@@ -34,25 +35,14 @@ public:
 template <class Type> Graph <Type>::Graph()
 {
 	(*this).vertices = 0;
-	(*this).adjacencyMatrix = new bool* [0];
+	(*this).adjacencyMatrix.num_rows = (*this).adjacencyMatrix.num_cols = 0;
 	(*this).incidenceMatrix = new bool* [0];
 }
 template <class Type> Graph <Type>::Graph(const unsigned long long& vertices)
 {
 	(*this).vertices = vertices;
 	adjacencyList = new std::list<Type>[(*this).vertices];
-	(*this).adjacencyMatrix = new bool* [(*this).vertices];
-	for (unsigned long long index = 0; index < (*this).vertices; index++)
-	{
-		adjacencyMatrix[index] = new bool[(*this).vertices];
-	}
-	for (unsigned long long row = 0; row < (*this).vertices; row++)
-	{
-		for (unsigned long long column = 0; column < (*this).vertices; column++)
-		{
-			(*this).adjacencyMatrix[row][column] = false;
-		}
-	}
+	(*this).adjacencyMatrix.getNumberOfRows() = (*this).adjacencyMatrix.getNumberOfColumns() = (*this).vertices;
 	(*this).incidenceMatrix = new bool* [(*this).vertices];
 	for (unsigned long long index = 0; index < (*this).vertices; index++)
 	{
@@ -84,8 +74,8 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type>& graph)
 {
 	//graph.printAdjacencyList();
-	//graph.printAdjacencyMatrix();
-	graph.printIncidenceMatrix();
+	graph.printAdjacencyMatrix();
+	//graph.printIncidenceMatrix();
 	return output;
 }
 template <class Type> void Graph <Type>::printAdjacencyList()
@@ -113,12 +103,11 @@ template <class Type> void Graph <Type>::printAdjacencyList()
 template <class Type> void Graph <Type>::printAdjacencyMatrix()
 {
 	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency Matrix.csv");
-	for (unsigned long long row = 0; row < /*(*this).vertices*/ 300; row++)
+	for (unsigned long long row = 0; row < /*(*this).vertices*/50; row++)
 	{
-		for (unsigned long long column = 0; column < /*(*this).vertices*/ 300; column++)
-		{
-			file << (*this).adjacencyMatrix[row][column];
-			if (column < /*(*this).vertices*/ 300 - 1)
+		for (unsigned long long column = 0; column < /*(*this).vertices */ 50; column++) {
+			file << (*this).adjacencyMatrix.get(row, column);
+			if (column < /*(*this).vertices*/50 - 1)
 			{
 				file << ",";
 			}

@@ -1,6 +1,5 @@
 #include "../Headers/Graph.h"
 #include "../Headers/stringToType.h"
-#include "../Headers/sparseMatrix.h"
 #include <fstream>
 #include <vector>
 #include <string>
@@ -12,7 +11,6 @@ void Graph <Type>::inputData()
 {
 	try 
 	{
-		sparseMatrix <bool> S((*this).vertices, (*this).vertices);
         std::ifstream file;
 		//file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/git_web_ml/musae_git_edges.csv");
 		//file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/soc-sign-bitcoinalpha/soc-sign-bitcoinalpha.csv");
@@ -34,9 +32,8 @@ void Graph <Type>::inputData()
 			Type v = convert_to <Type>(secondColumn);
 			edge++;
 			//(*this).addEdge(u, v, edge);
-			S.add(u, v, true);
+			(*this).adjacencyMatrix.add(u, v, true);
 		}
-		S.print();
 	}
 	catch (...)
 	{
