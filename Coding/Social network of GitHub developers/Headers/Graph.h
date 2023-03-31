@@ -126,12 +126,12 @@ template <class Type> void Graph <Type>::printAdjacencyMatrix()
 template <class Type> void Graph <Type>::printIncidenceMatrix()
 {
 	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Incidence Matrix.csv");
-	for (unsigned long long row = 0; row < /*(*this).vertices*/ 10; row++)
+	for (unsigned long long row = 0; row < /*(*this).vertices*/ 100; row++)
 	{
-		for (unsigned long long column = 1; column < /*(*this).vertices*/ 10; column++)
+		for (unsigned long long column = 1; column < /*(*this).vertices*/ 100; column++)
 		{
 			file << (*this).incidenceMatrix[row][column];
-			if (column < /*(*this).vertices*/ 10 - 1)
+			if (column < /*(*this).vertices*/ 100 - 1)
 			{
 				file << ",";
 			}

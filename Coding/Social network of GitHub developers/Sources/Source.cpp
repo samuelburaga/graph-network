@@ -3,9 +3,9 @@
 
 int main()
 {
-	Graph <unsigned long long> GitHub(37700);
+	Graph <unsigned long long> GitHub(8000);
 	GitHub.inputData();
 	std::cout << GitHub;
-	//GitHub.printShortestDistance(1, 1213);
+	GitHub.printShortestDistance(119, 562);
 	return 0;
 }

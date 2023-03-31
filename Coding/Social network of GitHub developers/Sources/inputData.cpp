@@ -12,12 +12,14 @@ void Graph <Type>::inputData()
 	try 
 	{
         std::ifstream file;
-		file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/git_web_ml/musae_git_edges.csv");
-		std::string titles;
-		getline(file, titles);
+		//file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/git_web_ml/musae_git_edges.csv");
+		file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/soc-sign-bitcoinalpha/soc-sign-bitcoinalpha.csv");
+		//std::string titles;
+		//getline(file, titles);
 		std::string line;
 		unsigned long long edge = 0;
-		while (getline(file, line) && edge != 10)
+
+		while (getline(file, line) && edge != (*this).vertices)
 		{
 			std::istringstream ss(line);
 			std::string firstColumn, secondColumn;
@@ -27,6 +29,7 @@ void Graph <Type>::inputData()
 			int num2 = stoi(secondColumn);
 			Type u = convert_to <Type>(firstColumn);
 			Type v = convert_to <Type>(secondColumn);
+			std::cout << u << " " << v << "\n";
 		/*	if (u > (*this).vertices)
 			{
 				(*this).vertices = u;
