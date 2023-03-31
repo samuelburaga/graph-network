@@ -31,8 +31,7 @@ void Graph <Type>::inputData()
 			Type u = convert_to <Type>(firstColumn);
 			Type v = convert_to <Type>(secondColumn);
 			edge++;
-			//(*this).addEdge(u, v, edge);
-			(*this).adjacencyMatrix.add(u, v, true);
+			(*this).addEdge(u, v, edge);
 		}
 	}
 	catch (...)

@@ -11,13 +11,13 @@ template <class Type>
 class Graph
 {
 private:
-	unsigned long long vertices;
+	unsigned long long vertices, edges;
 	std::list<Type>* adjacencyList;
 	sparseMatrix <bool> adjacencyMatrix;
-	bool** incidenceMatrix;
+	sparseMatrix <bool> incidenceMatrix;
 public:
 	Graph();
-	Graph(const unsigned long long&);
+	Graph(const unsigned long long&, unsigned long long edges = 0);
 	void inputData();
 	void addEdge(const unsigned long long&, const unsigned long long&);
 	void addEdge(const unsigned long long&, const unsigned long long&, const unsigned long long&);
@@ -34,27 +34,17 @@ public:
 };
 template <class Type> Graph <Type>::Graph()
 {
-	(*this).vertices = 0;
+	(*this).vertices = (*this).edges = 0;
 	(*this).adjacencyMatrix.num_rows = (*this).adjacencyMatrix.num_cols = 0;
-	(*this).incidenceMatrix = new bool* [0];
+	(*this).incidenceMatrix.num_rows = (*this).incidenceMatrix.num_cols = 0;
 }
-template <class Type> Graph <Type>::Graph(const unsigned long long& vertices)
+template <class Type> Graph <Type>::Graph(const unsigned long long& vertices, unsigned long long edges)
 {
 	(*this).vertices = vertices;
 	adjacencyList = new std::list<Type>[(*this).vertices];
 	(*this).adjacencyMatrix.getNumberOfRows() = (*this).adjacencyMatrix.getNumberOfColumns() = (*this).vertices;
-	(*this).incidenceMatrix = new bool* [(*this).vertices];
-	for (unsigned long long index = 0; index < (*this).vertices; index++)
-	{
-		incidenceMatrix[index] = new bool[(*this).vertices];
-	}
-	for (unsigned long long row = 0; row < (*this).vertices; row++)
-	{
-		for (unsigned long long column = 0; column < (*this).vertices; column++)
-		{
-			(*this).incidenceMatrix[row][column] = false;
-		}
-	}
+	(*this).adjacencyMatrix.getNumberOfRows() = (*this).vertices;
+	(*this).adjacencyMatrix.getNumberOfColumns() = (*this).edges;
 }
 template <class Type> unsigned long long& Graph <Type>::getVertices()
 {
@@ -62,20 +52,23 @@ template <class Type> unsigned long long& Graph <Type>::getVertices()
 }
 template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long &v)
 {
-	adjacencyList[u].push_back(v);
-	adjacencyMatrix[u][v] = adjacencyMatrix[v][u] = true;
+	//adjacencyList[u].push_back(v);
+	(*this).adjacencyMatrix.add(u, v, true);
+	(*this).adjacencyMatrix.add(v, u, true);
 }
 template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long& v, const unsigned long long& edge)
 {
-	adjacencyList[u].push_back(v);
-	adjacencyMatrix[u][v] = adjacencyMatrix[v][u] = true;
-	incidenceMatrix[u][edge] = incidenceMatrix[v][edge] = true;
+	//adjacencyList[u].push_back(v);
+	(*this).adjacencyMatrix.add(u, v, true);
+	(*this).adjacencyMatrix.add(v, u, true);
+	(*this).incidenceMatrix.add(u, edge, true);
+	(*this).incidenceMatrix.add(v, edge, true);
 }
 template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type>& graph)
 {
 	//graph.printAdjacencyList();
 	graph.printAdjacencyMatrix();
-	//graph.printIncidenceMatrix();
+	graph.printIncidenceMatrix();
 	return output;
 }
 template <class Type> void Graph <Type>::printAdjacencyList()
@@ -105,7 +98,8 @@ template <class Type> void Graph <Type>::printAdjacencyMatrix()
 	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency Matrix.csv");
 	for (unsigned long long row = 0; row < /*(*this).vertices*/50; row++)
 	{
-		for (unsigned long long column = 0; column < /*(*this).vertices */ 50; column++) {
+		for (unsigned long long column = 0; column < /*(*this).vertices */ 50; column++) 
+		{
 			file << (*this).adjacencyMatrix.get(row, column);
 			if (column < /*(*this).vertices*/50 - 1)
 			{
@@ -119,12 +113,12 @@ template <class Type> void Graph <Type>::printAdjacencyMatrix()
 template <class Type> void Graph <Type>::printIncidenceMatrix()
 {
 	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Incidence Matrix.csv");
-	for (unsigned long long row = 0; row < /*(*this).vertices*/100; row++)
+	for (unsigned long long row = 0; row < /*(*this).vertices*/50; row++)
 	{
-		for (unsigned long long column = 0; column < /*(*this).vertices*/100; column++)
+		for (unsigned long long column = 0; column < /*(*this).vertices */ 50; column++)
 		{
-			file << (*this).incidenceMatrix[row][column];
-			if (column < /*(*this).vertices*/100 - 1)
+			file << (*this).incidenceMatrix.get(row, column);
+			if (column < /*(*this).vertices*/50 - 1)
 			{
 				file << ",";
 			}

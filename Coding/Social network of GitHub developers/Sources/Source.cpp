@@ -3,7 +3,7 @@
 
 int main()
 {
-	Graph <unsigned long long> GitHub(7624);
+	Graph <unsigned long long> GitHub(7624, 27.806);
 	GitHub.inputData();	
 	std::cout << GitHub;
 	//GitHub.printShortestDistance(2, 870);
