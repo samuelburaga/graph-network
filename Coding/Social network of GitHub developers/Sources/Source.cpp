@@ -4,10 +4,10 @@
 int main()
 {
 	Graph <unsigned long long> GitHub(7624);
-	GitHub.inputData();
+	GitHub.inputData();	
 	//std::cout << GitHub;
-	GitHub.printShortestDistance(2, 870);
+	//GitHub.printShortestDistance(2, 870);
 	//GitHub.countAndPrintConnectedComponents();
-	GitHub.findMST();
+	//GitHub.findMST();
 	return 0;
 }
