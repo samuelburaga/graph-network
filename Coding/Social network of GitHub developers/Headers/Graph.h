@@ -58,7 +58,8 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 }
 template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long& v, const unsigned long long& edge)
 {
-	//adjacencyList[u].push_back(v);
+	adjacencyList[u].push_back(v);
+	adjacencyList[v].push_back(u);
 	(*this).adjacencyMatrix.add(u, v, true);
 	(*this).adjacencyMatrix.add(v, u, true);
 	(*this).incidenceMatrix.add(u, edge, true);
@@ -66,7 +67,7 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 }
 template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type>& graph)
 {
-	//graph.printAdjacencyList();
+	graph.printAdjacencyList();
 	graph.printAdjacencyMatrix();
 	graph.printIncidenceMatrix();
 	return output;
@@ -74,7 +75,7 @@ template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type
 template <class Type> void Graph <Type>::printAdjacencyList()
 {
 	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency List.csv");
-	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 20; vertex++)
+	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 50; vertex++)
 	{
 		file << vertex << ",";
 		typename std::list<Type>::iterator i;
