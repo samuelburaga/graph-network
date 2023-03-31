@@ -135,7 +135,8 @@ template <class Type> bool Graph<Type>::BFS(const Type& source, const Type& dest
 
 	// Mark all the vertices as not visited and initialize predecessor and distance arrays
 	bool* visited = new bool[vertices];
-	for (unsigned long long i = 0; i < vertices; i++) {
+	for (unsigned long long i = 0; i < vertices; i++) 
+	{
 		visited[i] = false;
 		predecessor[i] = -1;
 		distance[i] = UINT_MAX;
@@ -182,24 +183,28 @@ template <class Type> void Graph <Type>::printShortestDistance(const Type& sourc
 	unsigned long long* distance = new unsigned long long[vertices];
 
 	// Run BFS and check if destination can be reached from source
-	if (BFS(source, destination, predecessor, distance)) {
+	if (BFS(source, destination, predecessor, distance)) 
+	{
 		// Print the shortest distance and path
-		std::cout << "Shortest distance between " << source << " and " << destination << " is " << distance[destination] << std::endl;
+		std::cout << "The shortest distance between " << source << " and " << destination << " is " << distance[destination] << "." << std::endl;
 
 		std::vector<Type> path;
 		Type currentVertex = destination;
 		path.push_back(currentVertex);
-		while (predecessor[currentVertex] != -1) {
+		while (predecessor[currentVertex] != -1) 
+		{
 			currentVertex = predecessor[currentVertex];
 			path.push_back(currentVertex);
 		}
 		std::cout << "Shortest path is: ";
-		for (typename std::vector<Type>::reverse_iterator it = path.rbegin(); it != path.rend(); ++it) {
+		for (typename std::vector<Type>::reverse_iterator it = path.rbegin(); it != path.rend(); ++it)
+		{
 			std::cout << *it << " ";
 		}
-		std::cout << std::endl;
+		std::cout << "." << std::endl;
 	}
-	else {
+	else 
+	{
 		std::cout << "No path exists between " << source << " and " << destination << std::endl;
 	}
 
