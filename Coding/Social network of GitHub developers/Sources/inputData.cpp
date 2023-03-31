@@ -13,9 +13,10 @@ void Graph <Type>::inputData()
 	{
         std::ifstream file;
 		//file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/git_web_ml/musae_git_edges.csv");
-		file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/soc-sign-bitcoinalpha/soc-sign-bitcoinalpha.csv");
-		//std::string titles;
-		//getline(file, titles);
+		//file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/soc-sign-bitcoinalpha/soc-sign-bitcoinalpha.csv");
+		file.open("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Resources/lasftm_asia/lastfm_asia_edges.csv");
+		std::string titles;
+		getline(file, titles);
 		std::string line;
 		unsigned long long edge = 0;
 
@@ -29,16 +30,6 @@ void Graph <Type>::inputData()
 			int num2 = stoi(secondColumn);
 			Type u = convert_to <Type>(firstColumn);
 			Type v = convert_to <Type>(secondColumn);
-			std::cout << u << " " << v << "\n";
-		/*	if (u > (*this).vertices)
-			{
-				(*this).vertices = u;
-			}
-			if (v > (*this).vertices)
-			{
-				(*this).vertices = v;
-			}
-			(*this).vertices++;*/
 			edge++;
 			(*this).addEdge(u, v, edge);
 		}
