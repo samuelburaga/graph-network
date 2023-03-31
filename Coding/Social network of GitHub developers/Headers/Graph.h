@@ -26,6 +26,8 @@ public:
 	void printIncidenceMatrix();
 	bool BFS(const Type&, const Type&, Type[], unsigned long long[]);
 	void printShortestDistance(const Type&, const Type&);
+	void DFS(unsigned long long v, bool[], std::vector<Type>&);
+	void countAndPrintConnectedComponents();
 };
 template <class Type> Graph <Type>::Graph()
 {
@@ -217,4 +219,41 @@ template <class Type> void Graph <Type>::printShortestDistance(const Type& sourc
 
 	delete[] predecessor;
 	delete[] distance;
+}
+template <class Type> void Graph<Type>::DFS(unsigned long long v, bool visited[], std::vector<Type>& component)
+{
+	visited[v] = true;
+	component.push_back(v);
+
+	typename std::list<Type>::iterator i;
+	for (i = adjacencyList[v].begin(); i != adjacencyList[v].end(); ++i) {
+		if (!visited[*i]) {
+			DFS(*i, visited, component);
+		}
+	}
+}
+template <class Type> void Graph<Type>::countAndPrintConnectedComponents()
+{
+	bool* visited = new bool[vertices];
+	for (unsigned long long i = 0; i < vertices; i++) {
+		visited[i] = false;
+	}
+
+	unsigned long long numComponents = 0;
+	for (unsigned long long i = 0; i < vertices; i++) {
+		if (!visited[i]) {
+			numComponents++;
+			std::vector<Type> component;
+			DFS(i, visited, component);
+			std::cout << "Component " << numComponents << ": ";
+			for (typename std::vector<Type>::iterator it = component.begin(); it != component.end(); ++it) {
+				std::cout << *it << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
+
+	std::cout << "Number of connected components: " << numComponents << std::endl;
+
+	delete[] visited;
 }
