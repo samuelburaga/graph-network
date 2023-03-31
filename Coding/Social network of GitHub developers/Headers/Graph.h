@@ -2,6 +2,7 @@
 #include <queue>
 #include <vector>
 #include <list>
+#include <set>
 #include <iostream>
 #include <fstream>
 
@@ -28,6 +29,7 @@ public:
 	void printShortestDistance(const Type&, const Type&);
 	void DFS(unsigned long long v, bool[], std::vector<Type>&);
 	void countAndPrintConnectedComponents();
+	void findMST();
 };
 template <class Type> Graph <Type>::Graph()
 {
@@ -256,4 +258,56 @@ template <class Type> void Graph<Type>::countAndPrintConnectedComponents()
 	std::cout << "Number of connected components: " << numComponents << std::endl;
 
 	delete[] visited;
+}
+template <class Type> void Graph<Type>::findMST() {
+	// create a priority queue to hold edges in ascending order
+	std::priority_queue<std::pair<int, std::pair<unsigned long long, unsigned long long>>,
+		std::vector<std::pair<int, std::pair<unsigned long long, unsigned long long>>>> pq;
+
+	// add all edges to the priority queue
+	for (unsigned long long i = 0; i < vertices; i++) {
+		for (typename std::list<Type>::iterator it = adjacencyList[i].begin(); it != adjacencyList[i].end(); ++it) {
+			unsigned long long v = i;
+			unsigned long long w = *it;
+			if (v < w) {
+				pq.push(std::make_pair(1, std::make_pair(v, w)));
+			}
+		}
+	}
+
+	// create a disjoint set for vertices
+	std::vector<unsigned long long> parent(vertices);
+	for (unsigned long long i = 0; i < vertices; i++) {
+		parent[i] = i;
+	}
+
+	// create a vector to store the MST edges
+	std::vector<std::pair<unsigned long long, unsigned long long>> mst;
+
+	// process edges in the priority queue until all vertices are in the same component
+	while (!pq.empty() && mst.size() < vertices - 1) {
+		std::pair<int, std::pair<unsigned long long, unsigned long long>> curr = pq.top();
+		pq.pop();
+		unsigned long long u = curr.second.first;
+		unsigned long long v = curr.second.second;
+
+		// check if u and v are in different components
+		while (parent[u] != u) {
+			u = parent[u];
+		}
+		while (parent[v] != v) {
+			v = parent[v];
+		}
+		if (u != v) {
+			// add the edge to the MST
+			mst.push_back(std::make_pair(curr.second.first, curr.second.second));
+			parent[u] = v;
+		}
+	}
+
+	// print the MST edges
+	std::cout << "Minimum Spanning Tree:" << std::endl;
+	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it) {
+		std::cout << it->first << " - " << it->second << std::endl;
+	}
 }

@@ -7,6 +7,7 @@ int main()
 	GitHub.inputData();
 	//std::cout << GitHub;
 	GitHub.printShortestDistance(2, 870);
-	GitHub.countAndPrintConnectedComponents();
+	//GitHub.countAndPrintConnectedComponents();
+	GitHub.findMST();
 	return 0;
 }
