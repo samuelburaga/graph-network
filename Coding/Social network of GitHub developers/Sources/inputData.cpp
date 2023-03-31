@@ -17,7 +17,7 @@ void Graph <Type>::inputData()
 		getline(file, titles);
 		std::string line;
 		unsigned long long edge = 0;
-		while (getline(file, line) && edge <= 100)
+		while (getline(file, line) && edge != 10)
 		{
 			std::istringstream ss(line);
 			std::string firstColumn, secondColumn;

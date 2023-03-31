@@ -1,4 +1,6 @@
 #pragma once
+#include <queue>
+#include <vector>
 #include <list>
 #include <iostream>
 #include <fstream>
@@ -22,6 +24,8 @@ public:
 	void printAdjacencyList();
 	void printAdjacencyMatrix();
 	void printIncidenceMatrix();
+	bool BFS(const Type&, const Type&, Type[], unsigned long long[]);
+	void printShortestDistance(const Type&, const Type&);
 };
 template <class Type> Graph <Type>::Graph()
 {
@@ -135,4 +139,82 @@ template <class Type> void Graph <Type>::printIncidenceMatrix()
 		file << "\n";
 	}
 	file.close();
+}
+template <class Type> bool Graph<Type>::BFS(const Type& source, const Type& destination,  Type predecessor[], unsigned long long distance[])
+{
+	// Create a queue for BFS
+	std::queue<Type> queue;
+
+	// Mark all the vertices as not visited and initialize predecessor and distance arrays
+	bool* visited = new bool[vertices];
+	for (unsigned long long i = 0; i < vertices; i++) {
+		visited[i] = false;
+		predecessor[i] = -1;
+		distance[i] = UINT_MAX;
+	}
+
+	// Mark the source vertex as visited and enqueue it
+	visited[source] = true;
+	distance[source] = 0;
+	queue.push(source);
+
+	// Loop until the queue is empty
+	while (!queue.empty()) {
+		// Dequeue a vertex from the queue
+		Type currentVertex = queue.front();
+		queue.pop();
+
+		// Get all adjacent vertices of the dequeued vertex currentVertex
+		for (auto it = adjacencyList[currentVertex].begin(); it != adjacencyList[currentVertex].end(); ++it) {
+			// If an adjacent vertex has not been visited, then mark it visited and enqueue it
+			if (!visited[*it]) {
+				visited[*it] = true;
+				distance[*it] = distance[currentVertex] + 1;
+				predecessor[*it] = currentVertex;
+				queue.push(*it);
+
+				// If the destination vertex is found, return true
+				if (*it == destination) {
+					delete[] visited;
+					return true;
+				}
+			}
+		}
+	}
+
+	delete[] visited;
+
+	// If destination vertex is not found, return false
+	return false;
+}
+template <class Type> void Graph <Type>::printShortestDistance(const Type& source, const Type& destination)
+{
+	// Initialize predecessor and distance arrays
+	Type* predecessor = new Type[vertices];
+	unsigned long long* distance = new unsigned long long[vertices];
+
+	// Run BFS and check if destination can be reached from source
+	if (BFS(source, destination, predecessor, distance)) {
+		// Print the shortest distance and path
+		std::cout << "Shortest distance between " << source << " and " << destination << " is " << distance[destination] << std::endl;
+
+		std::vector<Type> path;
+		Type currentVertex = destination;
+		path.push_back(currentVertex);
+		while (predecessor[currentVertex] != -1) {
+			currentVertex = predecessor[currentVertex];
+			path.push_back(currentVertex);
+		}
+		std::cout << "Shortest path is: ";
+		for (typename std::vector<Type>::reverse_iterator it = path.rbegin(); it != path.rend(); ++it) {
+			std::cout << *it << " ";
+		}
+		std::cout << std::endl;
+	}
+	else {
+		std::cout << "No path exists between " << source << " and " << destination << std::endl;
+	}
+
+	delete[] predecessor;
+	delete[] distance;
 }
