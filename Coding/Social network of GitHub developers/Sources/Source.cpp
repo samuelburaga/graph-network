@@ -9,5 +9,6 @@ int main()
 	GitHub.printShortestDistance(2, 870);
 	GitHub.countAndPrintConnectedComponents();
 	GitHub.printEulerianCycles();
+	GitHub.printMST();
 	return 0;
 }

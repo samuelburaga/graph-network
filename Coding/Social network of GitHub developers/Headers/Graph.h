@@ -30,11 +30,13 @@ public:
 	void printIncidenceMatrix();
 	bool BFS(const Type&, const Type&, Type[], unsigned long long[]);
 	void printShortestDistance(const Type&, const Type&);
+	void printMST();
 	void DFS(unsigned long long v, bool[], std::vector<Type>&);
 	unsigned long long countAndPrintConnectedComponents();
 	bool isConnected();
 	bool isEulerian();
 	void printEulerianCycles();
+	bool isAdjacent(Type, Type);
 };
 template <class Type> Graph <Type>::Graph()
 {
@@ -58,7 +60,8 @@ template <class Type> unsigned long long& Graph <Type>::getVertices()
 }
 template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long &v)
 {
-	//adjacencyList[u].push_back(v);
+	(*this).adjacencyList[u].push_back(v);
+	(*this).adjacencyList[v].push_back(u);
 	(*this).adjacencyMatrix.add(u, v, true);
 	(*this).adjacencyMatrix.add(v, u, true);
 }
@@ -84,7 +87,7 @@ template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type
 template <class Type> void Graph <Type>::printAdjacencyList()
 {
 	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency List.csv");
-	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 50; vertex++)
+	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 500; vertex++)
 	{
 		file << vertex << ",";
 		typename std::list<Type>::iterator i;
@@ -324,30 +327,92 @@ template <class Type> void Graph<Type>::printEulerianCycles()
 		std::cout << "The graph is not Eulerian.\n";
 		return;
 	}
-	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Eulerian Cycles.csv");
 	std::vector<unsigned long long> circuit, nodes;
 	circuit.reserve(edges);
 	nodes.reserve(vertices);
 	nodes.push_back(0);
-	while (!nodes.empty()) 
-	{
+	while (!nodes.empty()) {
 		unsigned long long node = nodes.back();
-		if ((*this).adjacencyList[node].empty()) 
-		{
-			for (auto u : circuit) 
-			{
-				file << u << " -> ";
-				file << u << ",";
+		if (adjacencyList[node].empty()) {
+			for (auto u : circuit) {
+				std::cout << u << " -> ";
 			}
-			fle << node << "\n";
+			std::cout << node << "\n";
 			circuit.pop_back();
 			nodes.pop_back();
 			continue;
 		}
 		circuit.push_back(node);
-		auto edge = (*this).adjacencyList[node].begin();
+		auto edge = adjacencyList[node].begin();
 		nodes.push_back(*edge);
-		(*this).adjacencyList[node].erase(edge);
+		adjacencyList[node].erase(edge);
 	}
 }
+template <class Type> bool Graph<Type>::isAdjacent(Type vertex1, Type vertex2) {
+	for (auto v : adjacencyList[vertex1]) {
+		if (v == vertex2) {
+			return true;
+		}
+	}
+	return false;
+}
+template <class Type> void Graph<Type>::printMST() {
+	// create a priority queue to hold edges in ascending order
+	std::priority_queue<std::pair<int, std::pair<unsigned long long, unsigned long long>>,
+		std::vector<std::pair<int, std::pair<unsigned long long, unsigned long long>>>> pq;
 
+	// add all edges to the priority queue
+	for (unsigned long long index = 0; index < vertices; index++)
+	{
+		for (typename std::list<Type>::iterator it = adjacencyList[index].begin(); it != adjacencyList[index].end(); ++it) {
+			unsigned long long v = index;
+			unsigned long long w = *it;
+			if (v < w)
+			{
+				pq.push(std::make_pair(1, std::make_pair(v, w)));
+			}
+		}
+	}
+
+	// create a disjoint set for vertices
+	std::vector<unsigned long long> predecessor((*this).vertices);
+	for (unsigned long long index = 0; index < vertices; index++)
+	{
+		predecessor[index] = index;
+	}
+
+	// create a vector to store the MST edges
+	std::vector<std::pair<unsigned long long, unsigned long long>> mst;
+
+	// process edges in the priority queue until all vertices are in the same component
+	while (!pq.empty() && mst.size() < (*this).vertices - 1)
+	{
+		std::pair<int, std::pair<unsigned long long, unsigned long long>> curr = pq.top();
+		pq.pop();
+		unsigned long long u = curr.second.first;
+		unsigned long long v = curr.second.second;
+
+		// check if u and v are in different components
+		while (predecessor[u] != u)
+		{
+			u = predecessor[u];
+		}
+		while (predecessor[v] != v)
+		{
+			v = predecessor[v];
+		}
+		if (u != v)
+		{
+			// add the edge to the MST
+			mst.push_back(std::make_pair(curr.second.first, curr.second.second));
+			predecessor[u] = v;
+		}
+	}
+
+	// print the MST edges
+	std::cout << "Minimum Spanning Tree:" << std::endl;
+	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it)
+	{
+		std::cout << it->first << " - " << it->second << std::endl;
+	}
+}
