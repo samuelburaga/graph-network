@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>Resources/CSV/lasftm_asia/lastfm_asia_edges.csv</file>
     </qresource>
 </RCC>
