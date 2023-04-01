@@ -1,7 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include "../Headers/sparseMatrix.h"
+#include "sparseMatrix.h"
 #include <queue>
 #include <stack>
 #include <vector>
