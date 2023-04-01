@@ -2,13 +2,10 @@
 !*/
 !*.cpp
 !*.h
+!*.py
 !**/Headers/**
 !**/Resources/
 !**/Resources/**
 !**/Output/
 !**/Output/**
-!App/GraphNetwork/*.qml
-!App/GraphNetwork/*.qrc
-!App/GraphNetwork/*.cpp
-!App/GraphNetwork/*.h
-!App/GraphNetwork/*.pro
+!App/Graph network/
