@@ -12,8 +12,7 @@
 #include <fstream>
 #include <unordered_map>
 
-template <class Type>
-class Graph
+template <class Type> class Graph
 {
 private:
     unsigned long long vertices, edges, numberOfComponents;
@@ -27,7 +26,7 @@ public:
     void addEdge(const unsigned long long&, const unsigned long long&);
     void addEdge(const unsigned long long&, const unsigned long long&, const unsigned long long&);
     unsigned long long& getVertices();
-    template <class Type> friend std::ostream& operator<<(std::ostream&, Graph <Type>&);
+    friend std::ostream& operator<<(std::ostream&, Graph <Type>&);
     void printAdjacencyList();
     void printAdjacencyMatrix();
     void printIncidenceMatrix();
@@ -47,8 +46,8 @@ template <class Type> Graph <Type>::Graph()
 {
     (*this).vertices = (*this).edges = 0;
     (*this).numberOfComponents = 0;
-    (*this).adjacencyMatrix.num_rows = (*this).adjacencyMatrix.num_cols = 0;
-    (*this).incidenceMatrix.num_rows = (*this).incidenceMatrix.num_cols = 0;
+    (*this).adjacencyMatrix.numberOfRows = (*this).adjacencyMatrix.numberOfColumns = 0;
+    (*this).incidenceMatrix.numberOfRows = (*this).incidenceMatrix.numberOfColumns = 0;
 }
 template <class Type> Graph <Type>::Graph(const unsigned long long& vertices, unsigned long long edges)
 {
@@ -467,7 +466,5 @@ template <class Type> void Graph<Type>::findAllHamiltonianCyclesRecursive(std::v
         }
     }
 }
-
-
 
 #endif // GRAPH_H

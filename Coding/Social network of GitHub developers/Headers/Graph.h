@@ -36,14 +36,16 @@ public:
 	bool isConnected();
 	bool isEulerian();
 	void printEulerianCycles();
+	void printAllHamiltonianCycles();
+	void findAllHamiltonianCyclesRecursive(std::vector<unsigned long long>&, bool[], unsigned long long);
 	bool isAdjacent(Type, Type);
 };
 template <class Type> Graph <Type>::Graph()
 {
 	(*this).vertices = (*this).edges = 0;
 	(*this).numberOfComponents = 0;
-	(*this).adjacencyMatrix.num_rows = (*this).adjacencyMatrix.num_cols = 0;
-	(*this).incidenceMatrix.num_rows = (*this).incidenceMatrix.num_cols = 0;
+	(*this).adjacencyMatrix.numberOfRows = (*this).adjacencyMatrix.numberOfColumns = 0;
+	(*this).incidenceMatrix.numberOfRows = (*this).incidenceMatrix.numberOfColumns = 0;
 }
 template <class Type> Graph <Type>::Graph(const unsigned long long& vertices, unsigned long long edges)
 {
@@ -414,5 +416,51 @@ template <class Type> void Graph<Type>::printMST() {
 	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it)
 	{
 		std::cout << it->first << " - " << it->second << std::endl;
+	}
+}
+template <class Type> void Graph<Type>::printAllHamiltonianCycles() {
+	if (!isConnected()) {
+		std::cout << "Graph is not connected. Cannot find Hamiltonian cycles.\n";
+		return;
+	}
+
+	// Initialize visited array and path vector
+	bool* visited = new bool[vertices];
+	std::vector<unsigned long long> path;
+
+	for (unsigned long long i = 0; i < vertices; i++) {
+		visited[i] = false;
+	}
+
+	// Start recursive search from each vertex
+	for (unsigned long long i = 0; i < vertices; i++) {
+		path.clear();
+		path.push_back(i);
+		visited[i] = true;
+		findAllHamiltonianCyclesRecursive(path, visited, i);
+		visited[i] = false;
+	}
+
+	delete[] visited;
+}
+template <class Type> void Graph<Type>::findAllHamiltonianCyclesRecursive(std::vector<unsigned long long>& path, bool visited[], unsigned long long start) {
+	// Check if all vertices have been visited and if the last vertex in path is adjacent to start vertex
+	if (path.size() == vertices && isAdjacent(path.back(), start)) {
+		for (unsigned long long i = 0; i < vertices; i++) {
+			std::cout << path[i] << " ";
+		}
+		std::cout << start << std::endl;
+		return;
+	}
+
+	// Recursive step: find all unvisited neighbors and add them to the path
+	for (auto neighbor : adjacencyList[start]) {
+		if (!visited[neighbor]) {
+			visited[neighbor] = true;
+			path.push_back(neighbor);
+			findAllHamiltonianCyclesRecursive(path, visited, start);
+			path.pop_back();
+			visited[neighbor] = false;
+		}
 	}
 }

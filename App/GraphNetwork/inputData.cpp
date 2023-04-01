@@ -34,6 +34,6 @@ template <class Type> void Graph <Type>::inputData()
     }
     catch (...)
     {
-        throw new std::exception("File error!");
+        throw std::runtime_error("File error!");
     }
 }
