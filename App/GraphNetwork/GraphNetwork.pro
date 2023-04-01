@@ -22,4 +22,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Graph.h \
-    sparseMatrix.h
+    sparseMatrix.h \
+    stringToType.h
