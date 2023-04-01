@@ -5,11 +5,10 @@ int main()
 {
 	Graph <unsigned long long> GitHub(7624, 27806);
 	GitHub.inputData();	
-	//std::cout << GitHub;
+	std::cout << GitHub;
 	GitHub.printShortestDistance(2, 870);
-	//GitHub.countAndPrintConnectedComponents();
-	//GitHub.printEulerianCycles();
-	//GitHub.printMST();
-	GitHub.printAllHamiltonianCycles();
+	GitHub.countAndPrintConnectedComponents();
+	GitHub.printEulerianCycles();
+	GitHub.printMST();
 	return 0;
 }

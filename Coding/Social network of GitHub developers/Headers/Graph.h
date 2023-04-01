@@ -36,8 +36,6 @@ public:
 	bool isConnected();
 	bool isEulerian();
 	void printEulerianCycles();
-	void printAllHamiltonianCycles();
-	void findAllHamiltonianCyclesRecursive(std::vector<unsigned long long>&, bool[], unsigned long long);
 	bool isAdjacent(Type, Type);
 };
 template <class Type> Graph <Type>::Graph()
@@ -69,11 +67,11 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 }
 template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, const unsigned long long& v, const unsigned long long& edge)
 {
-	static unsigned long long i = 1;
+	/*static unsigned long long i = 1;
 	std::cout << i << "\n";
-	i++;
-	adjacencyList[u].push_back(v);
-	adjacencyList[v].push_back(u);
+	i++;*/
+	(*this).adjacencyList[u].push_back(v);
+	(*this).adjacencyList[v].push_back(u);
 	(*this).adjacencyMatrix.add(u, v, true);
 	(*this).adjacencyMatrix.add(v, u, true);
 	(*this).incidenceMatrix.add(u, edge, true);
@@ -82,14 +80,14 @@ template <class Type> void Graph <Type>::addEdge(const unsigned long long& u, co
 template <class Type> std::ostream& operator<<(std::ostream& output, Graph <Type>& graph)
 {
 	graph.printAdjacencyList();
-	graph.printAdjacencyMatrix();
-	graph.printIncidenceMatrix();
+	//graph.printAdjacencyMatrix();
+	//graph.printIncidenceMatrix();
 	return output;
 }
 template <class Type> void Graph <Type>::printAdjacencyList()
 {
-	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency List.csv");
-	for (unsigned long long vertex = 0; vertex < /*(*this).vertices*/ 500; vertex++)
+	std::ofstream file("Output/Adjacency List.csv");
+	for (unsigned long long vertex = 0; vertex < (*this).vertices; vertex++)
 	{
 		file << vertex << ",";
 		typename std::list<Type>::iterator i;
@@ -110,13 +108,13 @@ template <class Type> void Graph <Type>::printAdjacencyList()
 }
 template <class Type> void Graph <Type>::printAdjacencyMatrix()
 {
-	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Adjacency Matrix.csv");
-	for (unsigned long long row = 0; row < /*(*this).vertices*/50; row++)
+	std::ofstream file("Output/Adjacency Matrix.csv");
+	for (unsigned long long row = 0; row < (*this).vertices; row++)
 	{
-		for (unsigned long long column = 0; column < /*(*this).vertices */ 50; column++) 
+		for (unsigned long long column = 0; column < (*this).vertices ; column++)
 		{
 			file << (*this).adjacencyMatrix.get(row, column);
-			if (column < /*(*this).vertices*/50 - 1)
+			if (column < (*this).vertices - 1)
 			{
 				file << ",";
 			}
@@ -127,13 +125,13 @@ template <class Type> void Graph <Type>::printAdjacencyMatrix()
 }
 template <class Type> void Graph <Type>::printIncidenceMatrix()
 {
-	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Incidence Matrix.csv");
-	for (unsigned long long row = 0; row < /*(*this).vertices*/50; row++)
+	std::ofstream file("Output/Incidence Matrix.csv");
+	for (unsigned long long row = 0; row < (*this).vertices; row++)
 	{
-		for (unsigned long long column = 0; column < /*(*this).vertices */ 50; column++)
+		for (unsigned long long column = 0; column < (*this).vertices; column++)
 		{
 			file << (*this).incidenceMatrix.get(row, column);
-			if (column < /*(*this).vertices*/50 - 1)
+			if (column < (*this).vertices - 1)
 			{
 				file << ",";
 			}
@@ -258,7 +256,7 @@ template <class Type> void Graph<Type>::DFS(unsigned long long v, bool visited[]
 }
 template <class Type> unsigned long long Graph<Type>::countAndPrintConnectedComponents()
 {
-	std::ofstream file("D:/ULBS/Anul II/Semestrul II/Modulul 1/Algoritmica grafurilor/Project/Coding/Social network of GitHub developers/Output/Connected components.csv");
+	std::ofstream file("Output / Connected components.csv");
 	bool* visited = new bool[(*this).vertices];
 	for (unsigned long long index = 0; index < (*this).vertices; index++) 
 	{
@@ -358,7 +356,9 @@ template <class Type> bool Graph<Type>::isAdjacent(Type vertex1, Type vertex2) {
 	}
 	return false;
 }
-template <class Type> void Graph<Type>::printMST() {
+template <class Type> void Graph<Type>::printMST()
+{
+	std::ofstream file("Output/MST.csv");
 	// create a priority queue to hold edges in ascending order
 	std::priority_queue<std::pair<int, std::pair<unsigned long long, unsigned long long>>,
 		std::vector<std::pair<int, std::pair<unsigned long long, unsigned long long>>>> pq;
@@ -412,55 +412,9 @@ template <class Type> void Graph<Type>::printMST() {
 	}
 
 	// print the MST edges
-	std::cout << "Minimum Spanning Tree:" << std::endl;
+	file << "Minimum Spanning Tree:" << std::endl;
 	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it)
 	{
-		std::cout << it->first << " - " << it->second << std::endl;
-	}
-}
-template <class Type> void Graph<Type>::printAllHamiltonianCycles() {
-	if (!isConnected()) {
-		std::cout << "Graph is not connected. Cannot find Hamiltonian cycles.\n";
-		return;
-	}
-
-	// Initialize visited array and path vector
-	bool* visited = new bool[vertices];
-	std::vector<unsigned long long> path;
-
-	for (unsigned long long i = 0; i < vertices; i++) {
-		visited[i] = false;
-	}
-
-	// Start recursive search from each vertex
-	for (unsigned long long i = 0; i < vertices; i++) {
-		path.clear();
-		path.push_back(i);
-		visited[i] = true;
-		findAllHamiltonianCyclesRecursive(path, visited, i);
-		visited[i] = false;
-	}
-
-	delete[] visited;
-}
-template <class Type> void Graph<Type>::findAllHamiltonianCyclesRecursive(std::vector<unsigned long long>& path, bool visited[], unsigned long long start) {
-	// Check if all vertices have been visited and if the last vertex in path is adjacent to start vertex
-	if (path.size() == vertices && isAdjacent(path.back(), start)) {
-		for (unsigned long long i = 0; i < vertices; i++) {
-			std::cout << path[i] << " ";
-		}
-		std::cout << start << std::endl;
-		return;
-	}
-
-	// Recursive step: find all unvisited neighbors and add them to the path
-	for (auto neighbor : adjacencyList[start]) {
-		if (!visited[neighbor]) {
-			visited[neighbor] = true;
-			path.push_back(neighbor);
-			findAllHamiltonianCyclesRecursive(path, visited, start);
-			path.pop_back();
-			visited[neighbor] = false;
-		}
+		file << it->first << "," << it->second << std::endl;
 	}
 }
