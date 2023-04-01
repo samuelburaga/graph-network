@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-
+#include "Graph.h"
+#include "Graph.cpp"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
-
+    Graph <unsigned long long> GitHub(7624, 27806);
+    GitHub.runGraph();
     return app.exec();
 }

@@ -1,15 +1,13 @@
 #include <iostream>
 #include "inputData.cpp"
 
-int main()
+template <class Type> void Graph <Type>::runGraph()
 {
-    Graph <unsigned long long> GitHub(7624, 27.806);
-    GitHub.inputData();
-    //std::cout << GitHub;
-    GitHub.printShortestDistance(2, 870);
-    //GitHub.countAndPrintConnectedComponents();
-    //GitHub.printEulerianCycles();
-    //GitHub.printMST();
-    GitHub.printAllHamiltonianCycles();
-    return 0;
+    (*this).inputData();
+//    std::cout << GitHub;
+//    GitHub.printShortestDistance(2, 870);
+//    GitHub.countAndPrintConnectedComponents();
+//    GitHub.printEulerianCycles();
+//    GitHub.printMST();
+//    GitHub.printAllHamiltonianCycles();
 }

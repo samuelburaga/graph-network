@@ -41,13 +41,14 @@ public:
     void printAllHamiltonianCycles();
     void findAllHamiltonianCyclesRecursive(std::vector<unsigned long long>&, bool[], unsigned long long);
     bool isAdjacent(Type, Type);
+    void runGraph();
 };
 template <class Type> Graph <Type>::Graph()
 {
     (*this).vertices = (*this).edges = 0;
     (*this).numberOfComponents = 0;
-    (*this).adjacencyMatrix.numberOfRows = (*this).adjacencyMatrix.numberOfColumns = 0;
-    (*this).incidenceMatrix.numberOfRows = (*this).incidenceMatrix.numberOfColumns = 0;
+    (*this).adjacencyMatrix.getNumberOfRows() = (*this).adjacencyMatrix.getNumberOfColumns() = 0;
+    (*this).incidenceMatrix.getNumberOfRows() = (*this).incidenceMatrix.getNumberOfColumns() = 0;
 }
 template <class Type> Graph <Type>::Graph(const unsigned long long& vertices, unsigned long long edges)
 {

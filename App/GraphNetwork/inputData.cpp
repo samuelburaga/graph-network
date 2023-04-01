@@ -24,8 +24,6 @@ template <class Type> void Graph <Type>::inputData()
             std::string firstColumn, secondColumn;
             getline(ss, firstColumn, ',');
             getline(ss, secondColumn, ',');
-            int num1 = stoi(firstColumn);
-            int num2 = stoi(secondColumn);
             Type u = convert_to <Type>(firstColumn);
             Type v = convert_to <Type>(secondColumn);
             edge++;
