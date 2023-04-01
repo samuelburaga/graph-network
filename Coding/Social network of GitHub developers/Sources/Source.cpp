@@ -8,6 +8,6 @@ int main()
 	std::cout << GitHub;
 	GitHub.printShortestDistance(2, 870);
 	GitHub.countAndPrintConnectedComponents();
-	//GitHub.findMST();
+	GitHub.printEulerianCycles();
 	return 0;
 }

@@ -19,7 +19,6 @@ void Graph <Type>::inputData()
 		getline(file, titles);
 		std::string line;
 		unsigned long long edge = 0;
-
 		while (getline(file, line) /* && edge != (*this).vertices */)
 		{
 			std::istringstream ss(line);
