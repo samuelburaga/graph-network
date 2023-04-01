@@ -7,3 +7,8 @@
 !**/Resources/**
 !**/Output/
 !**/Output/**
+!App/GraphNetwork/*.qml
+!App/GraphNetwork/*.qrc
+!App/GraphNetwork/*.cpp
+!App/GraphNetwork/*.h
+!App/GraphNetwork/*.pro
