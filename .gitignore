@@ -9,3 +9,6 @@
 !**/Output/
 !**/Output/**
 !App/Graph network/
+!Documentation/
+!*.docx
+!*.pdf
