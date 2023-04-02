@@ -14,7 +14,7 @@ class Graph
 {
 private:
 	unsigned long long vertices, edges, numberOfComponents;
-	mutable std::list<Type>* adjacencyList;
+	std::list<Type>* adjacencyList;
 	sparseMatrix <bool> adjacencyMatrix;
 	sparseMatrix <bool> incidenceMatrix;
 public:
@@ -145,10 +145,7 @@ template <class Type> void Graph <Type>::printIncidenceMatrix()
 }
 template <class Type> bool Graph<Type>::BFS(const Type& source, const Type& destination,  Type predecessor[], unsigned long long distance[])
 {
-	// Create a queue for BFS
 	std::queue<Type> queue;
-
-	// Mark all the vertices as not visited and initialize predecessor and distance arrays
 	bool* visited = new bool[vertices];
 	for (unsigned long long i = 0; i < vertices; i++) 
 	{
@@ -156,28 +153,18 @@ template <class Type> bool Graph<Type>::BFS(const Type& source, const Type& dest
 		predecessor[i] = -1;
 		distance[i] = UINT_MAX;
 	}
-
-	// Mark the source vertex as visited and enqueue it
 	visited[source] = true;
 	distance[source] = 0;
 	queue.push(source);
-
-	// Loop until the queue is empty
 	while (!queue.empty()) {
-		// Dequeue a vertex from the queue
 		Type currentVertex = queue.front();
 		queue.pop();
-
-		// Get all adjacent vertices of the dequeued vertex currentVertex
 		for (auto it = adjacencyList[currentVertex].begin(); it != adjacencyList[currentVertex].end(); ++it) {
-			// If an adjacent vertex has not been visited, then mark it visited and enqueue it
 			if (!visited[*it]) {
 				visited[*it] = true;
 				distance[*it] = distance[currentVertex] + 1;
 				predecessor[*it] = currentVertex;
 				queue.push(*it);
-
-				// If the destination vertex is found, return true
 				if (*it == destination) {
 					delete[] visited;
 					return true;
@@ -185,25 +172,17 @@ template <class Type> bool Graph<Type>::BFS(const Type& source, const Type& dest
 			}
 		}
 	}
-
 	delete[] visited;
-
-	// If destination vertex is not found, return false
 	return false;
 }
 template <class Type> void Graph <Type>::printShortestDistance(const Type& source, const Type& destination)
 {
 	std::ofstream file("Output/Shortest distance.csv");
-	// Initialize predecessor and distance arrays
 	Type* predecessor = new Type[vertices];
 	unsigned long long* distance = new unsigned long long[vertices];
-
-	// Run BFS and check if destination can be reached from source
 	if (BFS(source, destination, predecessor, distance)) 
 	{
-		// Print the shortest distance and path
 		file << "The shortest distance between " << source << " and " << destination << " is " << distance[destination] << ".\n";
-
 		std::vector<Type> path;
 		Type currentVertex = destination;
 		path.push_back(currentVertex);
@@ -223,7 +202,6 @@ template <class Type> void Graph <Type>::printShortestDistance(const Type& sourc
 	{
 		file << "No path exists between " << source << " and " << destination << "\n";
 	}
-
 	delete[] predecessor;
 	delete[] distance;
 }
@@ -313,12 +291,13 @@ template <class Type> bool Graph<Type>::isConnected()
 template <class Type> bool Graph<Type>::isEulerian() 
 {
 	if (!(*this).isConnected()) 
-	{  // check if the graph is not connected
+	{  
 		return false;
 	}
 	for (unsigned long long i = 0; i < (*this).vertices; i++)
 	{
-		if ((*this).adjacencyList[i].size() % 2 != 0) {  // check if any vertex has odd degree
+		if ((*this).adjacencyList[i].size() % 2 != 0) 
+		{
 			return false;
 		}
 	}
@@ -338,8 +317,10 @@ template <class Type> void Graph<Type>::printEulerianCycles()
 	nodes.push_back(0);
 	while (!nodes.empty()) {
 		unsigned long long node = nodes.back();
-		if (adjacencyList[node].empty()) {
-			for (auto u : circuit) {
+		if (adjacencyList[node].empty()) 
+		{
+			for (auto u : circuit) 
+			{
 				file << u << ",";
 			}
 			file << node << "\n";
@@ -364,11 +345,8 @@ template <class Type> bool Graph<Type>::isAdjacent(Type vertex1, Type vertex2) {
 template <class Type> void Graph<Type>::printMST()
 {
 	std::ofstream file("Output/MST.csv");
-	// create a priority queue to hold edges in ascending order
 	std::priority_queue<std::pair<int, std::pair<unsigned long long, unsigned long long>>,
 		std::vector<std::pair<int, std::pair<unsigned long long, unsigned long long>>>> pq;
-
-	// add all edges to the priority queue
 	for (unsigned long long index = 0; index < vertices; index++)
 	{
 		for (typename std::list<Type>::iterator it = adjacencyList[index].begin(); it != adjacencyList[index].end(); ++it) {
@@ -380,26 +358,18 @@ template <class Type> void Graph<Type>::printMST()
 			}
 		}
 	}
-
-	// create a disjoint set for vertices
 	std::vector<unsigned long long> predecessor((*this).vertices);
 	for (unsigned long long index = 0; index < vertices; index++)
 	{
 		predecessor[index] = index;
 	}
-
-	// create a vector to store the MST edges
 	std::vector<std::pair<unsigned long long, unsigned long long>> mst;
-
-	// process edges in the priority queue until all vertices are in the same component
 	while (!pq.empty() && mst.size() < (*this).vertices - 1)
 	{
 		std::pair<int, std::pair<unsigned long long, unsigned long long>> curr = pq.top();
 		pq.pop();
 		unsigned long long u = curr.second.first;
 		unsigned long long v = curr.second.second;
-
-		// check if u and v are in different components
 		while (predecessor[u] != u)
 		{
 			u = predecessor[u];
@@ -410,13 +380,10 @@ template <class Type> void Graph<Type>::printMST()
 		}
 		if (u != v)
 		{
-			// add the edge to the MST
 			mst.push_back(std::make_pair(curr.second.first, curr.second.second));
 			predecessor[u] = v;
 		}
 	}
-
-	// print the MST edges
 	file << "Minimum Spanning Tree:" << std::endl;
 	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it)
 	{
@@ -426,25 +393,21 @@ template <class Type> void Graph<Type>::printMST()
 template <class Type> void Graph<Type>::printMaxMatching() const 
 {
 	std::ofstream file("Output/Maximum matching.csv");
-	// Create a copy of the adjacency list for modifying it
 	std::vector<std::list<Type>> adjList(vertices);
-	for (unsigned long long i = 0; i < vertices; i++) {
+	for (unsigned long long i = 0; i < vertices; i++) 
+	{
 		adjList[i] = adjacencyList[i];
 	}
-
-	// Initialize the matching to an empty set of edges
 	std::unordered_map<Type, Type> matching;
-
-	// Iterate over all vertices in the graph
-	for (Type u = 0; u < vertices; u++) {
-		// Iterate over all neighbors of u
-		for (auto it = adjList[u].begin(); it != adjList[u].end(); it++) {
+	for (Type u = 0; u < vertices; u++) 
+	{
+		for (auto it = adjList[u].begin(); it != adjList[u].end(); it++) 
+		{
 			Type v = *it;
-			// If there is an edge between u and v, add it to the matching
-			if (matching.find(u) == matching.end() && matching.find(v) == matching.end()) {
+			if (matching.find(u) == matching.end() && matching.find(v) == matching.end()) 
+			{
 				matching[u] = v;
 				matching[v] = u;
-				// Remove all edges incident to u and v from the adjacency list
 				adjList[u].clear();
 				adjList[v].clear();
 				for (Type w = 0; w < vertices; w++) {
@@ -455,11 +418,11 @@ template <class Type> void Graph<Type>::printMaxMatching() const
 			}
 		}
 	}
-
-	// Print the maximum matching
 	file << "Maximum matching:\n";
-	for (auto it = matching.begin(); it != matching.end(); ++it) {
-		if (it->first < it->second) {  // print each edge only once
+	for (auto it = matching.begin(); it != matching.end(); ++it) 
+	{
+		if (it->first < it->second) 
+		{
 			file << it->first << "," << it->second << "\n";
 		}
 	}
