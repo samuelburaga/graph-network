@@ -14,7 +14,7 @@ class Graph
 {
 private:
 	unsigned long long vertices, edges, numberOfComponents;
-	std::list<Type>* adjacencyList;
+	mutable std::list<Type>* adjacencyList;
 	sparseMatrix <bool> adjacencyMatrix;
 	sparseMatrix <bool> incidenceMatrix;
 public:
@@ -37,6 +37,8 @@ public:
 	bool isEulerian();
 	void printEulerianCycles();
 	bool isAdjacent(Type, Type);
+	void printHamiltonianCycle(const Type&, const Type&);
+	void printMaxMatching() const;
 };
 template <class Type> Graph <Type>::Graph()
 {
@@ -48,6 +50,7 @@ template <class Type> Graph <Type>::Graph()
 template <class Type> Graph <Type>::Graph(const unsigned long long& vertices, unsigned long long edges)
 {
 	(*this).vertices = vertices;
+	(*this).edges = edges;
 	(*this).numberOfComponents = 0;
 	(*this).adjacencyList = new std::list<Type>[(*this).vertices];
 	(*this).adjacencyMatrix.getNumberOfRows() = (*this).adjacencyMatrix.getNumberOfColumns() = (*this).vertices;
@@ -86,7 +89,7 @@ template <class Type> void Graph <Type>::printAdjacencyList()
 	std::ofstream file("Output/Adjacency List.csv");
 	for (unsigned long long vertex = 0; vertex < (*this).vertices; vertex++)
 	{
-		file << vertex << ",";
+		file << vertex + 1 << ",";
 		typename std::list<Type>::iterator i;
 		for (i = adjacencyList[vertex].begin(); i != adjacencyList[vertex].end(); ++i)
 		{
@@ -101,6 +104,7 @@ template <class Type> void Graph <Type>::printAdjacencyList()
 		}
 		file << "\n";
 	}
+	std::cout << "The adjacency list has been printed.\n";
 	file.close();
 }
 template <class Type> void Graph <Type>::printAdjacencyMatrix()
@@ -118,6 +122,7 @@ template <class Type> void Graph <Type>::printAdjacencyMatrix()
 		}
 		file << "\n";
 	}
+	std::cout << "The adjacency matrix has been printed.\n";
 	file.close();
 }
 template <class Type> void Graph <Type>::printIncidenceMatrix()
@@ -135,6 +140,7 @@ template <class Type> void Graph <Type>::printIncidenceMatrix()
 		}
 		file << "\n";
 	}
+	std::cout << "The incidence matrix has been printed.\n";
 	file.close();
 }
 template <class Type> bool Graph<Type>::BFS(const Type& source, const Type& destination,  Type predecessor[], unsigned long long distance[])
@@ -187,6 +193,7 @@ template <class Type> bool Graph<Type>::BFS(const Type& source, const Type& dest
 }
 template <class Type> void Graph <Type>::printShortestDistance(const Type& source, const Type& destination)
 {
+	std::ofstream file("Output/Shortest distance.csv");
 	// Initialize predecessor and distance arrays
 	Type* predecessor = new Type[vertices];
 	unsigned long long* distance = new unsigned long long[vertices];
@@ -195,7 +202,7 @@ template <class Type> void Graph <Type>::printShortestDistance(const Type& sourc
 	if (BFS(source, destination, predecessor, distance)) 
 	{
 		// Print the shortest distance and path
-		std::cout << "The shortest distance between " << source << " and " << destination << " is " << distance[destination] << "." << std::endl;
+		file << "The shortest distance between " << source << " and " << destination << " is " << distance[destination] << ".\n";
 
 		std::vector<Type> path;
 		Type currentVertex = destination;
@@ -205,16 +212,16 @@ template <class Type> void Graph <Type>::printShortestDistance(const Type& sourc
 			currentVertex = predecessor[currentVertex];
 			path.push_back(currentVertex);
 		}
-		std::cout << "Shortest path is: ";
+		file << "Shortest path is:,";
 		for (typename std::vector<Type>::reverse_iterator it = path.rbegin(); it != path.rend(); ++it)
 		{
-			std::cout << *it << " ";
+			file << *it << ",";
 		}
-		std::cout << "." << std::endl;
+		file << ".\n";
 	}
 	else 
 	{
-		std::cout << "No path exists between " << source << " and " << destination << std::endl;
+		file << "No path exists between " << source << " and " << destination << "\n";
 	}
 
 	delete[] predecessor;
@@ -253,7 +260,7 @@ template <class Type> void Graph<Type>::DFS(unsigned long long v, bool visited[]
 }
 template <class Type> unsigned long long Graph<Type>::countAndPrintConnectedComponents()
 {
-	std::ofstream file("Output / Connected components.csv");
+	std::ofstream file("Output/Connected components.csv");
 	bool* visited = new bool[(*this).vertices];
 	for (unsigned long long index = 0; index < (*this).vertices; index++) 
 	{
@@ -269,7 +276,7 @@ template <class Type> unsigned long long Graph<Type>::countAndPrintConnectedComp
 			file << "Component " << (*this).numberOfComponents << ", ";
 			for (typename std::vector<Type>::iterator it = component.begin(); it != component.end(); ++it) 
 			{
-				file << *it << ", ";
+				file << *it + 1 << ", ";
 			}
 			file << "\n";
 		}
@@ -319,9 +326,10 @@ template <class Type> bool Graph<Type>::isEulerian()
 }
 template <class Type> void Graph<Type>::printEulerianCycles()
 {
+	std::ofstream file("Output/Eulerian cycles.csv");
 	if (!isEulerian()) 
 	{
-		std::cout << "The graph is not Eulerian.\n";
+		file << "The graph is not Eulerian.\n";
 		return;
 	}
 	std::vector<unsigned long long> circuit, nodes;
@@ -332,9 +340,9 @@ template <class Type> void Graph<Type>::printEulerianCycles()
 		unsigned long long node = nodes.back();
 		if (adjacencyList[node].empty()) {
 			for (auto u : circuit) {
-				std::cout << u << " -> ";
+				file << u << ",";
 			}
-			std::cout << node << "\n";
+			file << node << "\n";
 			circuit.pop_back();
 			nodes.pop_back();
 			continue;
@@ -413,5 +421,46 @@ template <class Type> void Graph<Type>::printMST()
 	for (typename std::vector<std::pair<unsigned long long, unsigned long long>>::iterator it = mst.begin(); it != mst.end(); ++it)
 	{
 		file << it->first << "," << it->second << std::endl;
+	}
+}
+template <class Type> void Graph<Type>::printMaxMatching() const 
+{
+	std::ofstream file("Output/Maximum matching.csv");
+	// Create a copy of the adjacency list for modifying it
+	std::vector<std::list<Type>> adjList(vertices);
+	for (unsigned long long i = 0; i < vertices; i++) {
+		adjList[i] = adjacencyList[i];
+	}
+
+	// Initialize the matching to an empty set of edges
+	std::unordered_map<Type, Type> matching;
+
+	// Iterate over all vertices in the graph
+	for (Type u = 0; u < vertices; u++) {
+		// Iterate over all neighbors of u
+		for (auto it = adjList[u].begin(); it != adjList[u].end(); it++) {
+			Type v = *it;
+			// If there is an edge between u and v, add it to the matching
+			if (matching.find(u) == matching.end() && matching.find(v) == matching.end()) {
+				matching[u] = v;
+				matching[v] = u;
+				// Remove all edges incident to u and v from the adjacency list
+				adjList[u].clear();
+				adjList[v].clear();
+				for (Type w = 0; w < vertices; w++) {
+					adjList[w].remove(u);
+					adjList[w].remove(v);
+				}
+				break;
+			}
+		}
+	}
+
+	// Print the maximum matching
+	file << "Maximum matching:\n";
+	for (auto it = matching.begin(); it != matching.end(); ++it) {
+		if (it->first < it->second) {  // print each edge only once
+			file << it->first << "," << it->second << "\n";
+		}
 	}
 }
