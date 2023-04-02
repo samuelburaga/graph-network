@@ -11,7 +11,7 @@ template <class Type> void Graph <Type>::inputData()
 	try 
 	{
         std::ifstream file;
-		file.open("Resources/inf-power/inf-power.csv");
+		file.open("Resources/inf-power/inf-power-1.csv");
 		std::string titles;
 		getline(file, titles);
 		std::string line;
