@@ -51,6 +51,7 @@ git clone https://github.com/samuelburaga/graph-network.git
 <br clear = "all"><img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg/1101px-Microsoft_Office_Excel_%282019%E2%80%93present%29.svg.png" width = "10%" height = "10%">
 
 
-## Demo
+>## Demo
+Here is a picture of the graph network (it has 4941 nodes and 6954 edges):
 
-<div style = "text-align: center">
+![Graph network](App/Graph%20network/Output/Figure_1.svg)
