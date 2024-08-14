@@ -1,6 +1,6 @@
 <h1 align = "center"> Graph Network </h1>
 
-The objective of this project is the implementation of complex algorithms from the graphs field as well as the construction of methods for displaying them. This project was carried out within the study of graphs at ULBS university.
+The objective of this project is the implementation of complex algorithms from the graphs field as well as the construction of methods for displaying them.
 
 >## Getting Started
 
